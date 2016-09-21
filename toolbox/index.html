@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>TheToolbox.cc (Mirror)</title>
-	<link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>TheToolbox.cc (Mirror)</title>
+
+	<link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css" rel="stylesheet">
 
 	<style type="text/css">
 		.cards, .tags {
@@ -26,6 +28,8 @@
 			width: 300px;
 		}
 	</style>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
 
@@ -36,7 +40,7 @@
 
 				<div class="input-field">
 					<input id="search" type="search" v-model="searchKey" v-on:change="manageSearch" required>
-					<label for="search"><i class="material-icons">Search</i></label>
+					<label for="search"><i class="material-icons">search</i></label>
 					<i class="material-icons">close</i>
 				</div>
 
@@ -136,7 +140,6 @@
 			methods: {
 				manageSearch: function() {
 					this.tagAll();
-					//this.searchTerm = [this.searchKey];
 				},
 				manageTag: function() {
 
