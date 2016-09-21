@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TheToolbox.cc (Mirror)</title>
+	<link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+	<style type="text/css">
+		.cards, .tags {
+			display: flex;
+			flex-wrap: wrap;
+		}
+
+		.cards {
+			justify-content: center;
+		}	
+
+		.tags a, .tags p {
+			margin: 0.5em;
+		}	
+
+		.box {
+			margin: 1em;
+			width: 300px;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="container">
+
+		<nav>
+			<div class="nav-wrapper">
+
+				<div class="input-field">
+					<input id="search" type="search" v-model="searchKey" v-on:change="manageSearch" required>
+					<label for="search"><i class="material-icons">Search</i></label>
+					<i class="material-icons">close</i>
+				</div>
+
+			</div>
+		</nav>
+
+		<header>
+			<h1>TheToolbox.cc (Mirror)</h1>
+			<p>A collection of the best time-saving apps, tools, and widgets from around the web.</p>
+		</header>
+
+		<div>
+			<form action="#">
+				<p>
+					<input v-model="orderKey" type="radio" id="dateadded" value="id" checked />
+					<label for="dateadded">Date Added</label>
+				</p>
+				<p>
+					<input v-model="orderKey" type="radio" id="name" value="title" />
+					<label for="name">Name</label>
+				</p>
+
+				<div class="tags">
+					<p>
+				    	<input type="checkbox" class="filled-in" id="tagAll" v-model="selectedTagAll" v-on:change="tagAll"  />
+  						<label for="tagAll">All</label>
+					</p>				
+					<p v-for="tag in tags | orderBy 'name' order" v-on:change="manageTag">
+				    	<input type="checkbox" class="filled-in" id="tag{{$index}}" value="{{ tag.name }}" v-model="selectedTag"   />
+  						<label for="tag{{$index}}">{{ tag.name }}</label>
+					</p>
+				</div>
+			</form>	
+			
+		</div>
+
+
+		<div class="cards">
+			<div v-for="item in items | filterBy searchKey in 'title' 'content' | filterByTags searchTerm | orderBy orderKey order" class="box" id="item{{item.id}}">
+				<div class="card">
+					<div class="card-image">
+						<img v-bind:src="imgcdn+item.img">
+					</div>
+					<div class="card-content">
+						<span class="card-title">{{item.title}}</span>
+						<p v-for="p in item.content">{{ p }}</p>
+						<p>Tags: <b>{{ item.tagString | uppercase }}</b></p> 
+						<a href="{{item.url}}">Link</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+	<script type="text/javascript" src="toolbox.js"></script>
+	<script type="text/javascript">
+
+		var initData = function(d) {
+
+			let tag;
+			d.tags = {};
+
+
+			for (let i = d.posts.length - 1; i >= 0; i--) {
+				
+				for (let j = d.posts[i].tags.length - 1; j >= 0; j--) {
+					tag = d.posts[i].tags[j];
+
+					if(d.tags[tag] !== undefined) {
+						d.tags[tag].count++;
+					} else {
+						d.tags[tag] = {name: tag, count: 1};
+					}
+
+					d.posts[i].tagString = d.posts[i].tags.join(", ");
+				}
+						
+			}
+
+			return d;
+		};
+
+		var data = initData(rawData);
+
+		var vue = new Vue({
+			el: 'body',
+			data: {
+				items: data.posts,
+				imgcdn: data.baseurl,
+				tags: data.tags,
+				selectedTag: [],
+				selectedTagAll: true,
+				searchTerm: [],
+				orderKey: '',
+				searchKey: ''
+			},
+			methods: {
+				manageSearch: function() {
+					this.tagAll();
+					//this.searchTerm = [this.searchKey];
+				},
+				manageTag: function() {
+
+					if(this.selectedTag.length !== 0) {
+						this.selectedTagAll = false;
+					} else {
+						this.selectedTagAll = true;
+					}
+
+					this.searchTerm = this.selectedTag;
+
+				},
+				tagAll: function() {
+					this.selectedTag = [];
+					this.selectedTagAll = true;
+					this.searchTerm = [];
+				}
+			},
+		    filters:{
+		      filterByTags: function(data, search){ 
+
+		      	if(search.length == 0) {
+		      		return data;
+		      	}
+
+		      	let res = [];
+
+		      	for (let i = data.length - 1; i >= 0; i--) {
+
+		      		let intersection = search.filter(function(n) {
+    					return data[i].tags.indexOf(n) != -1;
+					});
+
+		      		if(intersection.length > 0) {
+		      			res.push(data[i]);
+		      		}
+
+
+		      	}
+
+		      	return res;
+		      }
+		    }			
+		});
+	</script>
+</body>
+</html>
