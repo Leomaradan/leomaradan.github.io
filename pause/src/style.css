@@ -1,0 +1,64 @@
+html, body, .layout {
+    height: 100%;
+    margin: 0;
+}
+
+.far {
+    font-size: 5vh;
+}
+
+.layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[v-cloak] { display: none; }
+
+.layout.setup {
+    background-color: steelblue;
+}
+
+.layout.timer {
+    background-color: darkorange;
+}
+  
+.center {
+    max-width: 50%;
+}
+
+.center button {
+    width: 100%;
+    height: 50px;
+}
+
+.clock {
+    font-family: 'Dancing Script', cursive;
+    text-align: center;
+}
+
+.clock h1, .clock h2 {
+    margin: 0;
+}
+
+.clock h1 {
+    font-size: 10vh;
+}
+
+.clock h2 {
+    font-size: 5vh;
+}
+
+.fs-toggle {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+
